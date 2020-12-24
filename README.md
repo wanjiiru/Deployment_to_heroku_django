@@ -1,6 +1,7 @@
 How to Deploy Django Applications on Heroku
 ===========================================
 
+![heroku-django](https://simpleisbetterthancomplex.com/media/2016-08-09-how-to-deploy-django-applications-on-heroku/featured.jpg)
 # Install heroku CLI
 [Sign up](https://signup.heroku.com/) to Heroku.
 
@@ -16,14 +17,9 @@ Authentication successful.
 ```
 
 # Preparing the Application
-In this tutorial I will deploy an existing project, [moringa-tribune-hosting](https://github.com/newtonkiragu/mtribune-hosting).
-It's an very simple open-source Django project, that shows news posted.
-Its available on [github](https://github.com/newtonkiragu/mtribune-hosting) so you can actually clone the repository and follow along or try it on your own existing django project.if you had problems with making the repo in heroku you can run :
-
-And do this in the root folder where the manage.py is...i think you might find it.
-```bash 
-heroku git:remote -a <application name>
-```
+In this tutorial I will be using a repo which is in development which is [ArtExtractKe](https://github.com/Benard18/ArtExtractKe)
+It's an very simple  Django project, that shows various categories and their companies.
+Its available on [github](https://github.com/Benard18/ArtExtractKe) so you can actually clone the repository and follow along or try it on your own existing django project.
 
 ## Assumptions
 * Your familiar with the basics of django e.g concept of apps, settings, urls, basics of databases 
@@ -83,17 +79,8 @@ Turns out django does not support serving static files in production. However, W
 
 Lets first install Whitenoise   `pip install whitenoise`
 
-Add the Whitenoise to your Django application in the wsgi.py file:
-```python 
-import os
-from django.core.wsgi import get_wsgi_application
-from whitenoise.django import DjangoWhiteNoise
+It is not a must to edit the wsgi.py file because there is an update available so let's just ignore it.
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "<project name>.settings")
-
-application = get_wsgi_application()
-application = DjangoWhiteNoise(application)
-```
 Next, install `WhiteNoise` into your Django application. This is done in `settings.py’s middleware section` (at the top):
 ```python 
 MIDDLEWARE_CLASSES = (
@@ -207,6 +194,7 @@ Next create the heroku app
 ```bash
 heroku create <your-app>
 ```
+
 Create a postgres addon to your heroku app
 ```bash
 heroku addons:create heroku-postgresql:hobby-dev
@@ -233,6 +221,12 @@ confirm that your application is running as expected before pushing, runtime err
 
 ```bash
 $ git push heroku master
+```
+
+if you find an error where the heroku git initialization has turned out unsuccessful; run the following command
+```
+bash
+$ heroku git:remote -a <application-name>
 ```
 If you did everything correctly then the deployment should be done after a while with an output like this
 
@@ -305,7 +299,7 @@ If you instead wish to push your postgres database data to heroku then run
 $ heroku pg:reset
 $ heroku pg:push <The name of the db in the local psql> DATABASE_URL --app <heroku-app>
 ```
-You can the open the app in your browser [mtribune](http://mtr1bune.herokuapp.com/ )
+You can the open the app in your browse.
 
 # Comment
 This process was a lot and you can easily mess up as I did, I suggest analyzing the part where you went wrong and going back to read on what you are supposed to do. I also highly recommend going through official documentations about deploying python projects to heroku as you will get a lot information that can help you debug effectively. I will provide some links in the resources section.
